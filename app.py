@@ -148,3 +148,4 @@ with tab2:
         else:
             st.markdown("<div class='result-box' style='color:#ff5555'>⚠️ Enter a coding task.</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+    GLM_API_KEY=039fbfc772f141fd8eb41aadc0c82969.TzfPx3O0fd6xYLpI
