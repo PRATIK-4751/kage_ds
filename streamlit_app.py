@@ -4,9 +4,9 @@ from app import main
 
 # For Streamlit Cloud deployment
 if __name__ == "__main__":
-    # Set default API key for demo purposes if not provided
+    # Set offline mode for Streamlit Cloud if no API key
     if "GLM_API_KEY" not in os.environ:
-        st.session_state.offline_mode = True
+        os.environ["GLM_API_KEY"] = ""  # Empty string triggers offline mode
     
     # Run the main app
     main()

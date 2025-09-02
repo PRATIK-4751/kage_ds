@@ -1,7 +1,12 @@
 import streamlit as st
 import pandas as pd
 import os
-from dotenv import load_dotenv
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # Skip dotenv loading in Streamlit Cloud
 
 from utils import load_data, create_visualization, get_data_context
 from api import cached_glm_call
@@ -12,8 +17,7 @@ from ui import (
 )
 
 def main():
-    load_dotenv()
-    API_KEY = os.getenv("GLM_API_KEY")
+    API_KEY = os.getenv("GLM_API_KEY", "")
     
     # Set a flag for offline mode
     if 'offline_mode' not in st.session_state:
