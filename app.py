@@ -51,7 +51,7 @@ def main():
     with tab1:
         section_start()
         display_icon("🌀")
-        uploaded = st.file_uploader("", type=["csv", "xlsx"], label_visibility="collapsed")
+        uploaded = st.file_uploader("Upload your file", type=["csv", "xlsx"], label_visibility="collapsed")
         
         if uploaded:
             df = load_data(uploaded)
@@ -66,7 +66,19 @@ def main():
                 y_col = st.selectbox("Y-Axis (Optional)", ["(None)"] + list(num_cols))
 
                 fig = create_visualization(df, x_col, y_col)
-                st.pyplot(fig)
+                if fig is not None:
+                    st.pyplot(fig)
+                else:
+                    # Fallback to plotly if matplotlib fails
+                    try:
+                        import plotly.express as px
+                        if y_col and y_col != "(None)":
+                            fig = px.scatter(df, x=x_col, y=y_col, title=f"{x_col} vs {y_col}")
+                        else:
+                            fig = px.histogram(df, x=x_col, title=f"Distribution of {x_col}")
+                        st.plotly_chart(fig, use_container_width=True)
+                    except ImportError:
+                        st.warning("Visualization libraries not available. Showing data summary instead.")
 
                 if st.button("AI Insight", key="analyze_btn"):
                     with st.spinner("Processing..."):
@@ -78,7 +90,7 @@ def main():
                 ask_section_start()
                 
                 question = st.text_input(
-                    "Enter your question", 
+                    "Question", 
                     placeholder="What's the average sales in Q3?", 
                     label_visibility="collapsed",
                     key="question_input"
@@ -111,7 +123,7 @@ def main():
         }
         
         lang = st.selectbox("Language", list(example_tasks.keys()))
-        task = st.text_area("", placeholder=example_tasks[lang], height=120)
+        task = st.text_area("Code Task", placeholder=example_tasks[lang], height=120, label_visibility="collapsed")
 
         if st.button("Generate", key="code_btn"):
             if task.strip():
